@@ -1,0 +1,21 @@
+function checkNavIntegrity(){navLinks.each(function(){var a=$(this).attr("href"),e=$(a)
+if(0==e.length){var t=$(this).html(),i=a.replace(/#/,"")
+alert('Navigation Broken: The menu link "'+t+'" points to a nonexistent ID "'+a+'". \nTo solve this, add the ID "'+i+'" to a tag, for example: <article id="'+i+'">')}})}function hash_handler(){var a=window.location.hash
+a?$("a[href="+a+"]").trigger("mousedown"):($("nav a.active").removeClass("active"),$("nav a:first").addClass("active"),page.unbind("scroll",scroll_handler),page.stop().animate({scrollTop:0},500,function(){page.bind("scroll",scroll_handler)}))}function isValidEmail(a){var e=RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i)
+return e.test(a)}var page,navLinks
+$(document).ready(function(){$("html").removeClass("no-js")
+var a,e=/android/gi.test(navigator.appVersion),t=/iphone|ipad|ipod/gi.test(navigator.appVersion),i=/playbook/gi.test(navigator.appVersion),n=/hp-tablet/gi.test(navigator.appVersion)
+a=e||t||i||n,a?($("html").addClass("mobile"),page=$("html,body")):page=$("#main"),navLinks=$('nav a[href^="#"]'),navLinks.each(function(){var a=$(this).attr("href").replace(/#/,"")
+$("#"+a).attr("id",a+"_modified")})
+var o
+navLinks.mousedown(function(){$("nav a.active").removeClass("active"),$(this).addClass("active")
+var a=$(this).attr("href"),e=page.scrollTop()+$(a+"_modified").position().top
+e=0==e?e:e+20,clearTimeout(o),page.unbind("scroll",scroll_handler),page.stop().animate({scrollTop:e},500,function(){clearTimeout(o),window.location.hash!==a&&(o=setTimeout(function(){location.hash=a},10)),page.bind("scroll",scroll_handler)})}).click(function(){return!1}),$(".logo a").mousedown(function(){$("nav a:first").trigger("mousedown")}).click(function(){return!1}),$("a.animate[href*=#]:not(nav a)").click(function(){var a=$(this).attr("href")
+return $("nav a[href="+a+"]").length>0?$("nav a[href="+a+"]").trigger("mousedown"):(targetPosition="#"!=a?$(a).offset().top+page.scrollTop()-page.position().top:0,page.unbind("scroll",scroll_handler),page.stop().animate({scrollTop:targetPosition},500,function(){page.bind("scroll",scroll_handler)})),!1}),$("a.targetblank").click(function(a){a.preventDefault(),a.stopPropagation(),window.open(this.href,"_blank")}),hash_handler()
+var r=$("ul.tabs")
+r.each(function(){var a=$(this).find("> li > a")
+a.mousedown(function(e){var t=$(this).attr("href")
+"#"==t.charAt(0)&&(e.preventDefault(),a.removeClass("active"),$(this).addClass("active"),$(t).show().addClass("active").siblings().hide().removeClass("active"))}).click(function(a){a.preventDefault()})}),$("form.send-with-ajax").submit(function(a){a.preventDefault()
+var e=$(this),t=!1
+$(".form-error-msg").remove(),e.find("input[type='email'], input[required]").each(function(){var a=$(this).val(),e=$(this).attr("required"),i=$(this).attr("type")
+$(this).removeClass("form-error"),e&&""==a?($(this).after('<div class="form-error-msg">Please fill out this field.</div>'),$(this).addClass("form-error"),t=!0):"email"!=i||isValidEmail(a)||($(this).after('<div class="form-error-msg">Please enter an email address.</div>'),$(this).addClass("form-error"),t=!0)}),t||(e.find("button:submit, input:submit").html("Sending..."),e.find(".ajax-response").empty(),$.post(e.attr("action"),e.serialize(),function(a){a.bFormSent?(e.find(".ajax-response").empty().html(a.aResults[0]),e.find("button:submit, input:submit").html("Submit Form"),e.find("#form-email, #form-name, #form-message").val("")):(e.find(".ajax-response").empty().wrapInner('<div class="form-error-msg"></div>'),e.find(".ajax-response div").html(a.aErrors[0]),e.find("button:submit, input:submit").html("Try Again"))},"json"))})}),$(window).hashchange(function(){hash_handler()}),$(window).load(function(){$(".flexslider").find(".slides").removeClass("notloaded"),$(".flexslider").flexslider({animation:"fade",slideshow:!0,slideshowSpeed:3e3,animationDuration:600,directionNav:!1,controlNav:!0,keyboardNav:!0,mousewheel:!1,slideToStart:0,animationLoop:!0,pauseOnAction:!0,pauseOnHover:!1})})
